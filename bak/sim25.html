@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sim&#183;TwentyFive</title>
+
+<style type="text/css">
+
+*{
+
+	font-family:'myriad pro', sans-serif;
+	color: white;
+	//background-color: #797979;
+	//background-color: #7d7d7d;
+	//background-color: #454545;
+	background-color: #6e6e6e;
+}
+#all{
+	width: 1024px;
+	height: 700px;
+	margin:auto;
+}
+.main_div{
+	width: 1020px;
+}
+.btn{
+	border-radius: 2px;
+	cursor: pointer;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	height: 27px;
+	width: 70px;
+	line-height: 27px;
+	background-color: #D14836;
+	float: left;
+	//opacity:0.9;
+}
+.querybtn{
+	background-color: #4D90FE; //color taken from Gmail
+	border: 1px solid #3079ED;
+	width: 50px;
+}
+.clear{
+	background-color: #4D90FE; //color taken from Gmail
+	border: 1px solid #3079ED;
+	width:30px;
+}
+.btn:active{
+	background-color:red;
+	opacity: 1;
+	background-color: #cb1a22;
+	color:white;
+}
+.clear:active{
+	background-color: blue; //color taken from Gmail
+	border: 1px solid blue;
+}
+.querybtn:active{
+	background-color: yellow;
+	opacity:1;
+}
+.phys_var{
+	width: 200px;
+	height: 200px;
+	border: 1px solid rgba(255, 255, 255, .1);
+	float: left;
+	border-radius: 1px;
+}
+.phys_row{
+	clear:both
+}
+th{
+	text-align: left;
+}
+.category_td{
+	opacity: 0.7;
+	font-size: 12px;
+}
+.query_td{
+	color: yellow;
+}
+.s_td{
+	color: #95f85f;
+}
+.pat_details{
+		border: 1px solid rgba(255, 255, 255, .1);
+		border-radius: 1px;
+		float: left;
+		width: 375px;
+		height: 270px;
+}
+.project_title{
+	font-variant: small-caps;
+	font-size: 28px;
+	font-weight: bold;
+}
+.subtitle{
+	color: white;
+	opacity: 0.7;
+	font-size: 12px;
+	font-variant: none;
+}
+.inputfield{
+	color: yellow;
+}
+#title{
+	position:relative;
+	right: -20px;
+	top: 50px;
+	text-anchor: middle;
+	float: left;
+	margin-right: 16px;
+}
+#sim_div{
+	float: left;
+	width: 630px;
+}
+#details_div{
+	float: left;
+	width: 380px;
+	height: 125px;
+	font-size: 12px;
+}
+#top{
+	height: 280px;
+}
+#top_left{
+	float: left;
+	height: 280px;;
+}
+#top_right{
+	float: left;
+}
+#query_box{
+	height: 30px;
+	clear: both;
+	margin-bottom: 5px;
+}
+#loading_screen{
+	position: absolute;
+	left: 500px;
+	top: 80px;
+}
+
+</style>
+</head>
+
+<body>
+<div id='loading_screen'>Loading patient data...</div>
+
+<div id="all">
+	<div id='top'>
+	
+		<div id='top_left'>
+			<div id="details_div">
+				<div id="query_box">
+					<table>
+						<tr>
+							<td><label class='category_td' for="query_input">Episode Id:</label></td> 
+								<td><input id="ep_id_input_box" class="inputfield" type="text" id="query_input" size="25" value='1'></td>
+							<td><div class='btn querybtn' onclick='getNewPatient();'>QUERY</div></td>
+						</tr>
+					</table>
+				</div> <!-- query_box -->
+				<div class='pat_details' id='query_div'>
+				</div>
+			</div>
+		</div> <!-- top_left -->
+	
+		<div id='top_right'>
+			<table>
+				<tr>
+					<td class='category_td'>Sort:</td>
+					<td><div class='btn' onclick='groupByGender()'>GENDER</div></td>
+					<td><div class='btn' onclick='groupByRace()'>RACE</div></td>
+					<td><div class='btn' onclick='groupByDiagnosis()'>DIAGNOSIS</div></td>
+					<td><div class='btn' onclick='groupByDischarge()'>DISCHARGE</div></td>
+					<td><div class='btn' onclick='groupByAge()'>AGE</div></td>
+					<td><div class='btn' onclick='groupByWeight()'>WEIGHT</div></td>
+					<td><div class='btn clear' onclick='clearSelections()'>C</div></td>
+				</tr>
+				<tr>
+					<td class='category_td'>Similarity:</td>
+					<td><div class='btn' onclick='changeSimSpacing("RANK")'>RANK</div>	</td>
+					<td><div class='btn' onclick='changeSimSpacing("RELATIVE")'>RELATIVE</div></td>
+					<td><div class='btn' onclick='changeSimSpacing("ABSOLUTE")'>ABSOLUTE</div></td>
+				</tr>
+			</table>
+			
+		<div class="main_div" id="sim_div">
+		</div> <!-- top_right -->
+		
+	</div> <!-- top_div -->
+	
+	<div class="main_div" id="phys_div">
+		<div class='phys_row' id='row1'>
+			<div class='phys_var' id="v1_div"></div>
+			<div class='phys_var' id="v2_div"></div>
+			<div class='phys_var' id="v3_div"></div>
+			<div class='phys_var' id="v4_div"></div>
+			<div class='phys_var' id="v5_div"></div>
+		</div>
+		<div class='phys_row' id='row2'>
+			<div class='phys_var' id="v6_div"></div>
+			<div class='phys_var' id="v7_div"></div>
+			<div class='phys_var' id="v8_div"></div>
+			<div class='phys_var' id="v9_div"></div>
+			<div class='phys_var' id="v10_div"></div>
+		</div>
+		<div class='phys_row' id='row3'>
+			<div class='phys_var' id="v11_div"></div>
+			<div class='phys_var' id="v12_div"></div>
+			<div class='phys_var' id="v13_div"></div>
+		</div>
+	</div> <!-- phys_div -->
+
+	<div id="title">
+			<span class='project_title'><span style="opacity:0.7;">Sim</span> <span style="color:yellow; opacity:1; font-size: 25px;">&#183;</span> <span style="opacity:0.7;">TwentyFive</span></span>
+			<div id='subtitle'>
+				<span class='subtitle'>source:&nbsp;<a href="http://www.picu.net/">CHLA, VPICU</a></span></br>
+				<span class='subtitle'>by: <a href='http://bmir.stanford.edu/people/view.php/brendan_stubbs'>Brendan Stubbs</a>, using <a href='http://mbostock.github.com/d3/'>D3</a></span>
+			</div>
+	</div>
+</div> <!-- all -->
+</body>
+
+
+<script type="text/javascript" src="d3/d3.js"></script>
+<script type="text/javascript" src="d3/d3.time.js"></script>
+<script type="text/javascript" src="d3/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="sim_json.js"></script>
+<script type="text/javascript" src="pinfo_json.js"></script>
+<script type="text/javascript" src="ep1phys_json.js"></script>
+
+<script type="text/javascript">
+
+//OPACITY///////////////////////////////////////////////////////////////////////////////////////////////////////
+var text_op = '0.7';
+var unselectcircle_op = '0.6';
+var select_op = '0.9';
+var axis_op = '0.1';
+var unselectline_op = '0.22';
+
+
+//GREEN AND WHITE PSEUDOCLASSES FOR TEXT HOVER//////////////////////////////////////////////////////////////////
+function turnTextGreen(){
+	d3.select(this).style('fill', '#95f85f')
+}
+function turnTextWhite(){
+	d3.select(this).style('fill', '#ffffff')
+}
+
+
+//LOAD INITIAL DEFAULT DATA///////////////////////////////////////////////////////////////////////////////////////////////////////
+var currPhData = ep1phys;
+var currQuery = 1;
+var currSimData = ep[currQuery];
+
+//DEFAULT SIMILARITY//////////////////////////////////////////////////////////////////////////////////////////////////////
+var simSpacing = 'RELATIVE' //RANK, RELATIVE, ABSOLUTE
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//QUERY NEW PATIENT///////////////////////////////////////////////////////////////////////////////////////////////////////
+function getNewPatient() {
+	var newEpIdInput = $('#ep_id_input_box').val();
+	
+	//AJAX REQUEST
+	$.ajax({
+		url: 'http://cgi.stanford.edu/~stubbs/sim25/jsons/ep'+newEpIdInput+'phys.json',
+		dataType: 'text',
+		error: function(){alert('Episode Id not available.  Please enter a number between 1 and 10598')},
+		success: function(data) {
+			var incomingJSON = eval('(' + data + ')');
+			console.log('Load was performed.  Redraw page.');
+			
+			//SWAP IN DATA FOR currPhData and currQuery
+			currQuery = newEpIdInput;
+			currPhData = incomingJSON;
+			currSimData = ep[newEpIdInput];
+			
+			//WRITE TABLE, 
+			writeDefaultTableString();
+			
+			//CLEAR SIM CANVAS, 
+			simCanvas.selectAll('text').remove();
+			simCanvas.selectAll('line').remove();
+			simCanvas.selectAll('circle').remove();			
+			
+			//DRAW SIM CANVAS, 
+			drawSimCanvas();
+			
+			//RESET yScale_OR
+			yScale_OR=[false,false,false,false,false,false,false,false,false,false,false,false];
+			
+			//CLEAR PHYS CANVAS 
+			clearPhCanvas();
+			
+			//DRAW PHYS CANVAS
+			drawPhCanvas();	
+		}
+	});
+}
+
+//RESPOND TO 'ENTER' KEYPRESS
+d3.select(window).on("keydown", function() {
+    switch (d3.event.keyCode) {
+	  case 13: getNewPatient(); break;  //pressed enter
+    }
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//SET UP PAT INFO DIV///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function writeDefaultTableString(){
+	var queryTableString ="<table>"+ 
+		"<tr>"+"<th>"+""+"</th>"+"<th class='query_td'>" + "Query Patient" + "</th>"+"<th class='s_td'>" + "Selected Patient" + "</th>"+
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Similarity: " +"</td>"+"<td class='query_td'>" + "" + "</td>"+
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Episode ID: " +"</td>"+"<td class='query_td'>" + pinfo[currQuery]['EPISODEID'] + "</td>"+
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Gender: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['SEX'] +"</td>"+ 
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Age: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['AGE'] + ' days' +"</td>"+ 
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Weight: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['WEIGHT'] +"</td>"+ 
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Height: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['HEIGHT'] +"</td>"+ 
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Race: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['Race'] +"</td>"+
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Primary Diagnosis: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['Diagnosis'] +"</td>"+ 
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Origin: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['Origin'] +"</td>"+ 
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"PCPC on Admit: "+"</td>" +"<td class='query_td'>"+ pinfo[currQuery]['AdmitPCPC'] +"</td>"+ 
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Discharge Condition: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['DischCond'] +"</td>"+ 
+		'</tr>' +
+		"<tr>"+"<td class='category_td'>"+"Reason for Death: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['DeathReason'] +"</td>"+ 
+		'</tr>' +
+		// "<tr>"+"<td>"+"Secondary Diagnoses: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['SecondaryDiagnoses'] +"</td>"+ 
+		// '</tr>' +
+		'</table>';
+
+	$('#query_div').html(queryTableString);
+}
+writeDefaultTableString()
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//SET UP SIM DOT CANVAS///////////////////////////////////////////////////////////////////////////////////////////////////////
+var sim_width = 500;
+var sim_height = 250;
+var sim_padding = 20; //used in the range scaling declaration, below
+
+//CREATE SIM CANVAS
+var simCanvas = d3.select('#sim_div')
+	.append('svg:svg')
+	.attr('width', sim_width+130) //100 px for y axis category labels
+	.attr('height', sim_height); 
+
+var sim_minY=0;
+var sim_maxY=100;
+var sim_minX=1;
+var sim_maxX=0;
+
+var sim_xScale;
+
+
+function drawSimilarityAxis(){
+
+	//AXIS LINE
+	// simCanvas.append("svg:line")
+		// .attr("x1", sim_xScale(sim_minX))
+		// .attr("x2", sim_xScale(sim_maxX))
+		// .attr("y1", sim_yScale(sim_minY))
+		// .attr("y2", sim_yScale(sim_minY))
+		// .attr('stroke', 'white')
+		// .attr('stroke-width', '1')
+		// .style('opacity', axis_op);
+		
+	//depends on simSpacing {RANK, RELATIVE, ABSOLUTE}
+	if (simSpacing == "RANK"){
+	
+		simCanvas.append("svg:text")
+			.attr('class', 'sim_axis_label')
+			.attr("x", sim_width/2)
+			.attr("y", sim_yScale(sim_minY)-12)
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.style('opacity',text_op)
+			.text("Similarity to Query Patient by Rank");
+			
+		simCanvas.selectAll("rule")
+			.data(sim_xScale.ticks(10))
+			.enter().append("svg:text")
+			.attr('class', 'sim_axis_label')
+			.attr('x', sim_xScale)
+			.attr('y', sim_yScale(sim_minY))
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.style('opacity',text_op)
+			.text(String);
+	}
+	
+	else if (simSpacing == "ABSOLUTE"){
+		//axis title
+		simCanvas.append("svg:text")
+			.attr('class', 'sim_axis_label')
+			.attr("x", sim_width/2)
+			.attr("y", sim_yScale(sim_minY)-12)
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.style('opacity',text_op)
+			.text("Similarity to Query Patient by Absolute Score");
+		
+		//tick labels
+		simCanvas.selectAll("rule")
+			.data(sim_xScale.ticks(6))
+			.enter().append("svg:text")
+			.attr('class', 'sim_axis_label')
+			.attr('x', sim_xScale)
+			.attr('y', sim_yScale(sim_minY))
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.style('opacity',text_op)
+			.text(function(String){return ((Math.round(parseFloat(String)*1000))/1000)});
+	}
+
+
+	else { //"RELATIVE"
+	
+		simCanvas.append("svg:text")
+			.attr('class', 'sim_axis_label')
+			.attr("x", sim_width/2)
+			.attr("y", sim_yScale(sim_minY)-12)
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.style('opacity',text_op)
+			.text("Similarity to Query Patient by Relative Score");
+			
+		//tick labels
+		simCanvas.selectAll("rule")
+			.data(sim_xScale.ticks(6))
+			.enter().append("svg:text")
+			.attr('class', 'sim_axis_label')
+			.attr('x', sim_xScale)
+			.attr('y', sim_yScale(sim_minY))
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.style('opacity',text_op)
+			.text(function(String){return ((Math.round(parseFloat(String)*1000))/1000)});
+	}
+		
+
+}
+
+
+//SET SIM_XSCALE BASED ON CHOSEN SIMILARITY SPACING/////////////////////////////////////////////////////////////////
+function setSimXScale(){
+
+	if (simSpacing == "RANK"){
+	sim_minX = 25;
+	sim_maxX = 1;
+	}
+	else if (simSpacing == "ABSOLUTE"){
+	sim_minX = 0.5;
+	sim_maxX = 1;
+	}
+	else { //RELATIVE
+	//max and min similarity from current 25 patient set
+	sim_minX=1;
+	sim_maxX=0;
+	for (var i=1; i<currSimData.length; i++){ //skip self match
+		if (currSimData[i]['sim']>sim_maxX) {sim_maxX = currSimData[i]['sim']}
+		if (currSimData[i]['sim']<sim_minX) {sim_minX = currSimData[i]['sim']}
+	}
+
+	}
+	sim_xScale = d3.scale.linear()
+		.domain([sim_minX, sim_maxX])
+		.range([0+sim_padding, sim_width-sim_padding]);
+}
+
+//CHANGE SIM SPACING////////////////////////////////////////////////////////////////
+function changeSimSpacing(newSpacing){
+	simSpacing = newSpacing;
+	setSimXScale();
+	
+	simCanvas.selectAll("circle")
+		.transition()
+		.duration(400)
+		.attr('cx', function(d, i){if (d.ep==currQuery){return sim_xScale(sim_maxX)+12;}
+			else{
+				if (simSpacing=="RANK"){return sim_xScale(i);}
+				else if (simSpacing == "RELATIVE"){return sim_xScale(d.sim);}
+				else if (simSpacing == "ABSOLUTE"){return sim_xScale(d.sim);};
+			}
+			});
+	
+	simCanvas.selectAll('.sim_axis_label').remove();
+	drawSimilarityAxis();
+}
+//DRAW SIMCANVAS///////////////////////////////////////////////////////////////////////////////////////////////////////
+function drawSimCanvas(){
+
+	setSimXScale();
+	
+	sim_yScale = d3.scale.linear()
+		.domain([sim_minY, sim_maxY])
+		.range([0+sim_padding,sim_height-sim_padding]);
+	sim_yTicksScale = d3.scale.linear()
+		.domain([sim_minY, sim_maxY])
+		.range([0+sim_padding,sim_height-sim_padding]);
+		
+	var sim_axisGroup = simCanvas.append('svg:g');
+		 
+	simCanvas.selectAll("circle")
+		.data(currSimData)
+		.enter()
+		.append('svg:circle')
+		.on('click', selectPatient)
+		.attr('cx', function(d, i){if (d.ep==currQuery){return sim_xScale(sim_maxX)+12;}
+				else{
+					if (simSpacing=="RANK"){return sim_xScale(i);}
+					else if (simSpacing == "RELATIVE"){return sim_xScale(d.sim);}
+					else if (simSpacing == "ABSOLUTE"){return sim_xScale(d.sim);};
+				}
+				})
+		.attr('cy', function(d){return sim_yScale(50)})
+		.attr('r', 2)
+		.attr('class', function(d){return ("_"+d.ep)})
+		.style('fill', function(d){if (d.ep==currQuery){return 'yellow';}else{return 'black';}})
+		.style('cursor', function(d){if (d.ep==currQuery){return 'default';}else{return 'pointer';}})
+		.style('stroke-width','3')
+		.transition()
+		.duration(400)
+		.attr('r',5)
+		.attr('opacity', function(d){if (d.ep==currQuery){return '1';}else{return unselectcircle_op;}})
+		.attr('stroke', function(d){if (d.ep==currQuery){return 'yellow';}else{return 'black';}})
+		.style('stroke-opacity', unselectline_op);
+		
+	sim_axisGroup.append("svg:text")
+		.attr("x", ((sim_width/2)))
+		.attr("y", ((sim_height/2)-40))
+		.attr("fill", "white")
+		.attr("text-anchor", "middle")
+		.attr("font-size", "12px")
+		.style('opacity',text_op)
+		.text("The twenty-five most similar patients to the query patient");
+	
+	sim_axisGroup.append("svg:text")
+		.attr("x", (sim_xScale(sim_maxX)+12))
+		.attr("y", ((sim_height/2)+20))
+		.attr("fill", "yellow")
+		.attr("text-anchor", "middle")
+		.attr("font-size", "12px")
+		.text("Query Patient");
+
+drawSimilarityAxis();
+
+} //end drawSimCanvas()
+
+drawSimCanvas();
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//SET UP PH CANVASES///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//ACTUAL LIMITS FROM DATA, NOT OFFICIAL VALID RANGES
+var var_lims = [ 
+{varnum:1,minY:1,maxY:250},
+{varnum:2,minY:1,maxY:250},
+{varnum:3,minY:1,maxY:25},
+{varnum:4,minY:2,maxY:150},
+{varnum:5,minY:0.1,maxY:1},
+{varnum:6,minY:2,maxY:15},
+{varnum:7,minY:1,maxY:1650},
+{varnum:8,minY:1,maxY:300},
+{varnum:9,minY:5.8,maxY:7.9},
+{varnum:10,minY:1,maxY:300},
+{varnum:11,minY:1,maxY:100},
+{varnum:12,minY:23,maxY:45},
+{varnum:13,minY:-10,maxY:120}
+];
+
+var ph_padding = 12; //used in the range scaling declaration, below
+
+var v_width = 200;
+var v_height = 200;
+
+var ph_minX=1;
+var ph_maxX=24;
+
+ph_xScale = d3.scale.linear()
+	.domain([ph_minX, ph_maxX])
+	.range([0+(ph_padding*2), (v_width-ph_padding/5)]);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//GROUPING FUNCTIONS///////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+//GROUP BY GENDER///////////////////////////////////////////////////////////////////////////////////////////////////////
+function groupByGender(){
+	simCanvas.selectAll('text').remove();
+	simCanvas.selectAll('line').remove();
+	drawSimilarityAxis();
+function groupByGenderHelper(datum){
+	var currGender = (pinfo[datum]['SEX'])
+	if (currGender == 'f'){return ((sim_maxY/3)*1);}
+	else if (currGender == 'm'){return ((sim_maxY/3)*2);}
+}
+
+	//MOVE CIRCLES
+	simCanvas.selectAll("circle")
+		.transition()
+		.duration(500)
+		.attr('cy', function(d){return sim_yScale(groupByGenderHelper(d.ep))});
+		
+	//GENDER LABELS
+	//female rect
+	// simCanvas.append("svg:rect")
+		// .attr('x', sim_xScale(sim_maxX)+24)
+		// .attr('y', sim_yScale((sim_maxY/3)*1)-8)
+		// .attr('class', 'f')
+		// .attr("fill", "#D14836")
+		// .attr('rx', '2')
+		// .attr('ry', '2')
+		// .attr('width', '42px')
+		// .attr('height', '14px');
+	//female label
+	simCanvas.append("svg:text")
+		.attr('x', sim_xScale(sim_maxX))
+		.attr('y', sim_yScale((sim_maxY/3)*1))
+		.attr('class', 'f')
+		.attr("dy", ".7em")
+		.attr("text-anchor", "left")
+		.attr("font-size", "12px")
+		//.style('stroke', 'red')
+		//.style('font-weight', 'bold')
+		.attr("fill", "white")
+		.attr('transform', 'translate(25,-5)')
+		.text("Female")
+		.style('cursor', 'pointer')
+		.on('click', selectCategory)
+		.on('mouseover', turnTextGreen)
+		.on('mouseout', turnTextWhite);
+	//female rule
+	simCanvas.append("svg:line")
+		.attr("x1", sim_xScale(sim_minX))
+		.attr("x2", sim_xScale(sim_maxX))
+		.attr("y1", sim_yScale((sim_maxY/3)*1)+5)
+		.attr("y2", sim_yScale((sim_maxY/3)*1)+5)
+		.attr('stroke', 'white')
+		.attr('stroke-width', '1')
+		.style('opacity', axis_op);
+		
+	//male rect
+	// simCanvas.append("svg:rect")
+		// .attr('x', sim_xScale(sim_maxX)+24)
+		// .attr('y', sim_yScale((sim_maxY/3)*2)-8)
+		// .attr('class', 'm')
+		// .attr("fill", "#D14836")
+		// .attr('rx', '2')
+		// .attr('ry', '2')
+		// .attr('width', '42px')
+		// .attr('height', '14px');
+	//male label
+	simCanvas.append("svg:text")
+		.attr('x', sim_xScale(sim_maxX))
+		.attr('y', sim_yScale((sim_maxY/3)*2))
+		.attr('class', 'm')
+		.attr("dy", ".7em")
+		.attr("text-anchor", "left")
+		.attr("font-size", "12px")
+		.attr("fill", "white")
+		.attr('transform', 'translate(25,-5)')
+		.text("Male")
+		.style('cursor', 'pointer')
+		.on('click', selectCategory)
+		.on('mouseover', turnTextGreen)
+		.on('mouseout', turnTextWhite);
+	//male rule
+	simCanvas.append("svg:line")
+		.attr("x1", sim_xScale(sim_minX))
+		.attr("x2", sim_xScale(sim_maxX))
+		.attr("y1", sim_yScale((sim_maxY/3)*2)+5)
+		.attr("y2", sim_yScale((sim_maxY/3)*2)+5)
+		.attr('stroke', 'white')
+		.attr('stroke-width', '1')
+		.style('opacity', axis_op);
+}
+
+//GROUP BY RACE///////////////////////////////////////////////////////////////////////////////////////////////////////
+function groupByRace(){
+	simCanvas.selectAll('text').remove();
+	simCanvas.selectAll('line').remove();
+	drawSimilarityAxis();
+	var races = ['Black', 'Chinese', 'Japanese', 'Korean', 'Latino', 'Pacific Islander', 'White', 'Unknown'];
+function groupByRaceHelper(datum){
+	var currRace = (pinfo[datum]['Race'])
+
+	if (currRace == races[0]){return ((sim_maxY/(races.length+1))*1);}
+	else if (currRace == races[1]){return ((sim_maxY/(races.length+1))*2);}
+	else if (currRace == races[2]){return ((sim_maxY/(races.length+1))*3);}
+	else if (currRace == races[3]){return ((sim_maxY/(races.length+1))*4);}
+	else if (currRace == races[4]){return ((sim_maxY/(races.length+1))*5);}
+	else if (currRace == races[5]){return ((sim_maxY/(races.length+1))*6);}
+	else if (currRace == races[6]){return ((sim_maxY/(races.length+1))*7);}
+	else {return ((sim_maxY/(races.length+1))*8);}
+}
+
+	//MOVE CIRCLES
+	simCanvas.selectAll("circle")
+		.transition()
+		.duration(500)
+		.attr('cy', function(d){return sim_yScale(groupByRaceHelper(d.ep))});
+		
+	for (i=0; i<races.length; i++){
+		simCanvas.append("svg:text")
+			.attr('x', sim_xScale(sim_maxX))
+			.attr('y', sim_yScale((sim_maxY/(races.length+1))*(i+1)))
+			.attr('class', races[i])
+			.attr("dy", ".7em")
+			.attr("text-anchor", "left")
+			.attr("font-size", "12px")
+			.attr("fill", "white")
+			.attr('transform', 'translate(25,-5)')
+			.text(races[i])
+			.style('cursor', 'pointer')
+			.on('click', selectCategory)
+			.on('mouseover', turnTextGreen)
+			.on('mouseout', turnTextWhite);
+		//race rules
+		simCanvas.append("svg:line")
+			.attr("x1", sim_xScale(sim_minX))
+			.attr("x2", sim_xScale(sim_maxX))
+			.attr("y1", sim_yScale((sim_maxY/(races.length+1))*(i+1))+5)
+			.attr("y2", sim_yScale((sim_maxY/(races.length+1))*(i+1))+5)
+			.attr('stroke', 'white')
+			.attr('stroke-width', '1')
+			.style('opacity', axis_op);
+	}
+}
+
+//GROUP BY DIAGNOSIS///////////////////////////////////////////////////////////////////////////////////////////////////////
+function groupByDiagnosis(){
+	simCanvas.selectAll('text').remove();
+	simCanvas.selectAll('line').remove();
+	drawSimilarityAxis();
+	var diag = ['Cardiovascular','Neurologic / Psychiatric', 'Trauma / Accident','Metabolic / Endocrine','Immunology / Allergy','Respiratory','Gastrointestinal','Hematology / Oncology','Neuromuscular Disease','Renal','General / Multisystem','Poisoning / Overdose','None'];
+	
+function groupByDiagnosisHelper(datum){
+	var currDiag = (pinfo[datum]['Diagnosis'])
+
+	if (currDiag == diag[0]){return ((sim_maxY/(diag.length+1))*1);}
+	else if (currDiag == diag[1]){return ((sim_maxY/(diag.length+1))*2);}
+	else if (currDiag == diag[2]){return ((sim_maxY/(diag.length+1))*3);}
+	else if (currDiag == diag[3]){return ((sim_maxY/(diag.length+1))*4);}
+	else if (currDiag == diag[4]){return ((sim_maxY/(diag.length+1))*5);}
+	else if (currDiag == diag[5]){return ((sim_maxY/(diag.length+1))*6);}
+	else if (currDiag == diag[6]){return ((sim_maxY/(diag.length+1))*7);}
+	else if (currDiag == diag[7]){return ((sim_maxY/(diag.length+1))*8);}
+	else if (currDiag == diag[8]){return ((sim_maxY/(diag.length+1))*9);}
+	else if (currDiag == diag[9]){return ((sim_maxY/(diag.length+1))*10);}
+	else if (currDiag == diag[10]){return ((sim_maxY/(diag.length+1))*11);}
+	else if (currDiag == diag[11]){return ((sim_maxY/(diag.length+1))*12);}
+	else if (currDiag == diag[12]){return ((sim_maxY/(diag.length+1))*13);}
+	else {return ((sim_maxY/(diag.length+1))*14);}
+}
+
+	//MOVE CIRCLES
+	simCanvas.selectAll("circle")
+		.transition()
+		.duration(500)
+		.attr('cy', function(d){return sim_yScale(groupByDiagnosisHelper(d.ep))});
+		
+	for (i=0; i<diag.length; i++){
+		simCanvas.append("svg:text")
+			.attr('x', sim_xScale(sim_maxX))
+			.attr('y', sim_yScale((sim_maxY/(diag.length+1))*(i+1)))
+			.attr('class', diag[i])
+			.attr("dy", ".7em")
+			.attr("text-anchor", "left")
+			.attr("font-size", "12px")
+			.attr("fill", "white")
+			.attr('transform', 'translate(25,-3)')
+			.text(diag[i])
+			.style('cursor', 'pointer')
+			.on('click', selectCategory)
+			.on('mouseover', turnTextGreen)
+			.on('mouseout', turnTextWhite);
+		
+		simCanvas.append("svg:line")
+			.attr("x1", sim_xScale(sim_minX))
+			.attr("x2", sim_xScale(sim_maxX))
+			.attr("y1", sim_yScale((sim_maxY/(diag.length+1))*(i+1))+5)
+			.attr("y2", sim_yScale((sim_maxY/(diag.length+1))*(i+1))+5)
+			.attr('stroke', 'white')
+			.attr('stroke-width', '1')
+			.style('opacity', axis_op);
+	}
+}
+
+//GROUP BY DISCHARGE///////////////////////////////////////////////////////////////////////////////////////////////////////
+function groupByDischarge(){
+	simCanvas.selectAll('text').remove();
+	simCanvas.selectAll('line').remove();
+	drawSimilarityAxis();
+	var disch = ['Died, no autopsy','Improved','Unchanged','Died, with autopsy','Died, coroners'];
+function groupByDischargeHelper(datum){
+	var currDisch = (pinfo[datum]['DischCond'])
+
+	if (currDisch == disch[0] || currDisch == disch[3] || currDisch == disch[4]){return ((sim_maxY/4)*1);}
+	else if (currDisch == disch[1]){return ((sim_maxY/4)*2);}
+	else {return ((sim_maxY/4)*3);}
+}
+
+	//MOVE CIRCLES
+	simCanvas.selectAll("circle")
+		.transition()
+		.duration(500)
+		.attr('cy', function(d){return sim_yScale(groupByDischargeHelper(d.ep))});
+		
+	//DISCH LABELS
+	simCanvas.append("svg:text")
+		.attr('x', sim_xScale(sim_maxX))
+		.attr('y', sim_yScale((sim_maxY/4)*1))
+		.attr('class', 'Died')
+		.attr("dy", ".7em")
+		.attr("text-anchor", "left")
+		.attr("font-size", "12px")
+		.attr("fill", "white")
+		.attr('transform', 'translate(25,-5)')
+		.text("Died")
+		.style('cursor', 'pointer')
+		.on('click', selectCategory)
+		.on('mouseover', turnTextGreen)
+		.on('mouseout', turnTextWhite);
+		
+	simCanvas.append("svg:text")
+			.attr('x', sim_xScale(sim_maxX))
+			.attr('y', sim_yScale((sim_maxY/4)*2))
+			.attr('class', 'Improved')
+			.attr("dy", ".7em")
+			.attr("text-anchor", "left")
+			.attr("font-size", "12px")
+			.attr("fill", "white")
+			.attr('transform', 'translate(25,-5)')
+			.text("Improved")
+			.style('cursor', 'pointer')
+			.on('click', selectCategory)
+			.on('mouseover', turnTextGreen)
+			.on('mouseout', turnTextWhite);
+		
+		simCanvas.append("svg:text")
+			.attr('x', sim_xScale(sim_maxX))
+			.attr('y', sim_yScale((sim_maxY/4)*3))
+			.attr('class', 'Unchanged')
+			.attr("dy", ".7em")
+			.attr("text-anchor", "left")
+			.attr("font-size", "12px")
+			.attr("fill", "white")
+			.attr('transform', 'translate(25,-5)')
+			.text("Unchanged")
+			.style('cursor', 'pointer')
+			.on('click', selectCategory)
+			.on('mouseover', turnTextGreen)
+			.on('mouseout', turnTextWhite);
+			
+		//discharge rules
+		for (var i=1; i<4; i++){
+		simCanvas.append("svg:line")
+			.attr("x1", sim_xScale(sim_minX))
+			.attr("x2", sim_xScale(sim_maxX))
+			.attr("y1", sim_yScale((sim_maxY/4)*i)+5)
+			.attr("y2", sim_yScale((sim_maxY/4)*i)+5)
+			.attr('stroke', 'white')
+			.attr('stroke-width', '1')
+			.style('opacity', axis_op);
+		}
+}
+
+//GROUP BY AGE///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function groupByAge(){
+	simCanvas.selectAll('text').remove();
+	simCanvas.selectAll('line').remove();
+	drawSimilarityAxis();
+	
+	sim_yScale_age = d3.scale.linear()
+		.domain([250, 1])
+		.range([0+sim_padding,sim_height-sim_padding]);
+
+	
+function groupByAgeHelper(datum){
+	var currAge = (pinfo[datum]['AGE'])
+	return currAge;
+}
+
+	//MOVE CIRCLES
+	simCanvas.selectAll("circle")
+		.transition()
+		.duration(500)
+		.attr('cy', function(d){return sim_yScale_age(groupByAgeHelper(d.ep))});
+		
+	//AGE Y-AXIS LABELS
+	simCanvas.selectAll("age")
+		 .data(sim_yScale_age.ticks(15))
+	   .enter().append("svg:text")
+		 .attr("y", sim_yScale_age)
+		 .attr("x", sim_xScale(sim_maxX))
+		 .attr("font-size", "12px")
+		 .attr("fill", "white")
+		 .attr("text-anchor", "left")
+		 .attr('transform', 'translate(25,0)')
+		 .attr('class', function(String){return ("age_"+String)})
+		 .text(function(String){return (String + " days")})
+		 .on('click', selectCategory)
+		 .style('cursor', 'pointer')
+		 .on('mouseover', turnTextGreen)
+		.on('mouseout', turnTextWhite);
+		 
+	//age rules
+	simCanvas.selectAll("age.ticks")
+	 .data(sim_yScale_age.ticks(10))
+	 .enter().append("svg:line")
+	 .attr("x1", sim_xScale(sim_minX))
+	 .attr("x2", sim_xScale(sim_maxX))
+	 .attr("y1", sim_yScale_age)
+	 .attr("y2", sim_yScale_age)
+	 .attr("stroke", "grey");
+}
+
+
+//GROUP BY WEIGHT///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function groupByWeight(){
+	simCanvas.selectAll('text').remove();
+	simCanvas.selectAll('line').remove();
+	drawSimilarityAxis();
+	
+	sim_yScale_weight = d3.scale.linear()
+		.domain([150, 1])
+		.range([0+sim_padding,sim_height-sim_padding]);
+
+	
+function groupByWeightHelper(datum){
+	var currWeight = (pinfo[datum]['WEIGHT'])
+	if (currWeight == 'NA'|| currWeight > 150){return 0;}
+	return currWeight;
+}
+
+	//MOVE CIRCLES
+	simCanvas.selectAll("circle")
+		.transition()
+		.duration(500)
+		.attr('cy', function(d){return sim_yScale_weight(groupByWeightHelper(d.ep))});
+		
+	//AGE Y-AXIS LABELS
+	simCanvas.selectAll("weight")
+		 .data(sim_yScale_weight.ticks(20))
+	   .enter().append("svg:text")
+		 .attr("y", sim_yScale_weight)
+		 .attr("x", sim_xScale(sim_maxX))
+		 .attr("font-size", "12px")
+		 .attr("fill", "white")
+		 .attr("text-anchor", "left")
+		 .attr('class', function(String){return ("weight_"+String)})
+		 .attr('transform', 'translate(25,0)')
+		 .text(String)
+		 .on('click', selectCategory)
+		 .style('cursor', 'pointer')
+		 .on('mouseover', turnTextGreen)
+		.on('mouseout', turnTextWhite);
+		 
+	//weight rules
+	simCanvas.selectAll("age.ticks")
+	 .data(sim_yScale_weight.ticks(10))
+	 .enter().append("svg:line")
+	 .attr("x1", sim_xScale(sim_minX))
+	 .attr("x2", sim_xScale(sim_maxX))
+	 .attr("y1", sim_yScale_weight)
+	 .attr("y2", sim_yScale_weight)
+	 .attr("stroke", "grey");
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//SELECTION OF PATIENTS//////////////////////////////////////////////////////////////////////////////////////////////////////
+var lastSelectedClass = false;
+//SELECT SINGLE PATIENT///////////////////////////////////////////////////////////////////////////////////////////////////////
+function selectPatient(){
+	if (d3.select(this).attr('class')==("_"+currQuery)){return false;}
+	var currClass = '.' + d3.select(this).attr('class');
+
+	//IF ALREADY SELECTED (GREEN)
+	//if white, make green	and make this last selected
+	if (d3.select(this).attr('stroke')=='#ffffff'){  
+		d3.selectAll(currClass)
+			.transition()
+			.duration(400)
+			.style('stroke','#95f85f')
+			.attr('stroke', '#95f85f')
+			.attr('opacity', select_op)
+			.style('stroke-opacity', select_op);
+			
+		writeSelectedTable(currClass);
+		
+		//make last selected (green) -> white
+		if((lastSelectedClass) && lastSelectedClass!=currClass){
+			d3.selectAll(lastSelectedClass)
+				.transition()
+				.duration(400)
+				.style('stroke','#ffffff')
+				.attr('stroke', '#ffffff')
+				.attr('opacity', select_op)
+				.style('stroke-opacity', select_op);
+		}
+		
+		lastSelectedClass = currClass;
+	}
+	
+	//IF GREEN
+	else if(d3.select(this).attr('stroke')=='#95f85f'){  
+		writeDefaultTableString();
+		d3.selectAll(currClass)
+		.transition()
+		.duration(400)
+		.style('stroke','black')
+		.attr('stroke', 'black')
+		.attr('opacity', unselectcircle_op)
+		.style('stroke-opacity', unselectline_op);
+		
+		if (currClass == lastSelectedClass){lastSelectedClass = false;}
+	}
+	
+	//IF NOT ALREADY SELECTED
+	else{
+		d3.selectAll(currClass)
+		.transition()
+		.duration(400)
+		.style('stroke','#95f85f')
+		.attr('stroke', '#95f85f')
+		.attr('opacity', select_op)
+		.style('stroke-opacity', select_op);
+	
+		if(lastSelectedClass!=currClass){
+			d3.selectAll(lastSelectedClass)
+				.transition()
+				.duration(400)
+				.style('stroke','#ffffff')
+				.attr('stroke', '#ffffff')
+				.attr('opacity', select_op)
+				.style('stroke-opacity', select_op);
+		}
+		writeSelectedTable(currClass);
+		
+		lastSelectedClass = currClass;
+	}
+}
+
+
+
+
+//SELECT CATEGORY///////////////////////////////////////////////////////////////////////////////////////////////////////
+function selectCategoryHelper(episodeId){
+	if (episodeId==currQuery){return false;}
+
+	var currCircleClass = "._"+episodeId;
+	
+	d3.selectAll(currCircleClass)
+		.transition()
+		.duration(400)
+		.style('stroke','white')
+		.attr('stroke', 'white')
+		.attr('opacity', select_op)
+		.style('stroke-opacity', select_op);
+	
+}
+
+function selectCategory(){
+
+	var currCategory = d3.select(this).attr('class');
+	var currAge = -100;
+	var currWeight = -100;
+	
+	console.log(currCategory);
+	
+	if ((currCategory.split("_")[0])=='age'){
+		currAge = parseFloat(currCategory.split("_")[1]);
+	}
+	if ((currCategory.split("_")[0])=='weight'){
+		currWeight = parseFloat(currCategory.split("_")[1]);
+	}
+	
+	//Change category color to green for an instant
+	var currClassSelector = currCategory.split(" ")[0];
+	d3.selectAll(("."+currClassSelector))
+		.attr('fill', '#95f85f')
+		.transition()
+		.duration(650)
+		.attr('fill', 'white');
+
+	//FIND PATIENTS THAT MATCH SELECTED CATEGORY
+	for (var i=0; i < currSimData.length; i++){
+		if (pinfo[currSimData[i]['ep']]['SEX'] == currCategory)
+			{selectCategoryHelper(currSimData[i]['ep']);}
+		if (pinfo[currSimData[i]['ep']]['Race'] == currCategory)
+			{selectCategoryHelper(currSimData[i]['ep']);}
+		if (pinfo[currSimData[i]['ep']]['Race'] == "Other / Unknown" || pinfo[currSimData[i]['ep']]['Race'] == "NA")
+			{if (currCategory=="Unknown"){selectCategoryHelper(currSimData[i]['ep']);}}
+		if (pinfo[currSimData[i]['ep']]['Diagnosis'] == currCategory)
+			{selectCategoryHelper(currSimData[i]['ep']);}
+		if (pinfo[currSimData[i]['ep']]['DischCond'] == currCategory)
+			{selectCategoryHelper(currSimData[i]['ep']);}
+		if (pinfo[currSimData[i]['ep']]['DischCond'] == "Died, coroners" || pinfo[currSimData[i]['ep']]['DischCond'] == "Died, no autopsy" ||  pinfo[currSimData[i]['ep']]['DischCond'] == "Died, with autopsy")
+			{if (currCategory=='Died'){selectCategoryHelper(currSimData[i]['ep'])}
+			}
+		if ( Math.abs((parseFloat(pinfo[currSimData[i]['ep']]['AGE'])) - currAge) < 10 ){
+			selectCategoryHelper(currSimData[i]['ep']);
+		}
+		
+		if (pinfo[currSimData[i]['ep']]['WEIGHT'] == 'NA'){continue;}
+		if (Math.abs((parseFloat(pinfo[currSimData[i]['ep']]['WEIGHT'])) - currWeight) < 10 ){
+			selectCategoryHelper(currSimData[i]['ep']);
+		}
+		
+	}
+}
+
+//CLEAR ALL SELECTED PATIENTS///////////////////////////////////////////////////////////////////////////////////////////////////////
+function clearSelections(){		
+	for (var i=0; i<currSimData.length; i++){
+	if (currSimData[i]['ep']==currQuery){continue;}
+	var currClass = "._"+(currSimData[i]['ep']);
+	
+	d3.selectAll(currClass)
+			.transition()
+			.duration(400)
+			.style('stroke','black')
+			.attr('stroke', 'black')
+			.attr('opacity', unselectcircle_op)
+			.style('stroke-opacity', unselectline_op);
+	}
+	
+	writeDefaultTableString();
+	lastSelectedClass = false;
+}
+
+//DYNAMIC TABLE BUILDER///////////////////////////////////////////////////////////////////////////////////////////////////////
+function writeSelectedTable(currClassInput){
+
+	if (currClassInput == ("._"+currQuery)){return false;}
+	
+	var currEpId = currClassInput.split("_")[1];
+	
+	var currEpIdSimilarity = 0
+	
+	for (var i=1; i<currSimData.length; i++){ //skip self match
+		if (currSimData[i]['ep']==currEpId) {currEpIdSimilarity = currSimData[i]['sim']}
+}
+	currEpIdSimilarity = (Math.round(currEpIdSimilarity*1000))/1000
+	
+var queryTableString ="<table>"+ 
+	"<tr>"+"<th>"+""+"</th>"+"<th class='query_td'>" + "Query Patient" + "</th>"+"<th class='s_td'>" + "Selected Patient" + "</th>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Similarity: " +"</td>"+"<td class='query_td'>" + "" + "</td>"+"<td class='s_td'>" + currEpIdSimilarity + "</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Episode ID: " +"</td>"+"<td class='query_td'>" + pinfo[currQuery]['EPISODEID'] + "</td>"+"<td class='s_td'>" + pinfo[currEpId]['EPISODEID'] + "</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Gender: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['SEX'] +"</td>"+"<td class='s_td'>"+ pinfo[currEpId]['SEX'] +"</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Age: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['AGE'] + ' days' +"</td>"+"<td class='s_td'>"+ pinfo[currEpId]['AGE'] + ' days' +"</td>"+ 
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Weight: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['WEIGHT'] +"</td>"+"<td class='s_td'>" +pinfo[currEpId]['WEIGHT'] +"</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Height: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['HEIGHT'] +"</td>"+ "<td class='s_td'>"+ pinfo[currEpId]['HEIGHT'] +"</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Race: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['Race'] +"</td>"+ "<td class='s_td'>"+ pinfo[currEpId]['Race'] +"</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Primary Diagnosis: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['Diagnosis'] +"</td>"+ "<td class='s_td'>"+ pinfo[currEpId]['Diagnosis'] +"</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Origin: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['Origin'] +"</td>"+ "<td class='s_td'>"+ pinfo[currEpId]['Origin'] +"</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"PCPC on Admit: "+"</td>" +"<td class='query_td'>"+ pinfo[currQuery]['AdmitPCPC'] +"</td>"+ "<td class='s_td'>"+ pinfo[currEpId]['AdmitPCPC'] +"</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Discharge Condition: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['DischCond'] +"</td>"+ "<td class='s_td'>"+ pinfo[currEpId]['DischCond'] +"</td>"+
+	'</tr>' +
+	"<tr>"+"<td class='category_td'>"+"Reason for Death: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['DeathReason'] +"</td>"+ "<td class='s_td'>"+ pinfo[currEpId]['DeathReason'] +"</td>"+ 
+	'</tr>' +
+	// "<tr>"+"<td>"+"Secondary Diagnoses: " +"</td>"+"<td class='query_td'>"+ pinfo[currQuery]['SecondaryDiagnoses'] +"</td>"+ "<td class='s_td'>"+ pinfo[currEpId]['SecondaryDiagnoses'] +"</td>"+
+	// '</tr>' +
+	'</table>';
+
+	$('#query_div').html(queryTableString);
+}
+
+
+//RESELECT PATIENTS; NEEDED SINCE LINES ARE RE-DRAWN ON ASPECT RATIO CHANGE///////////////////////////////////////////////////////////////////////////////////////////////////////
+function reselectPatients(){	
+	for (var i=0; i<currSimData.length; i++){
+		if (currSimData[i]['ep']==currQuery){continue;}
+		var currClass = "._"+(currSimData[i]['ep']);
+		
+		if ((simCanvas.selectAll(currClass).attr('stroke'))=='#ffffff'){
+			d3.selectAll(currClass)
+				.style('stroke','#ffffff')
+				.attr('stroke', '#ffffff')
+				.attr('opacity', select_op)
+				.style('stroke-opacity', select_op);
+		}
+		
+		else if ((simCanvas.selectAll(currClass).attr('stroke'))=='#95f85f'){
+			d3.selectAll(currClass)
+				.style('stroke','#95f85f')
+				.attr('stroke', '#95f85f')
+				.attr('opacity', select_op)
+				.style('stroke-opacity', select_op);
+		}
+	}
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//PHYS CANVASES//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	 
+var v1_yScale = d3.scale.linear().domain([(var_lims[0]['maxY']), (var_lims[0]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v2_yScale = d3.scale.linear().domain([(var_lims[1]['maxY']), (var_lims[1]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v3_yScale = d3.scale.linear().domain([(var_lims[2]['maxY']), (var_lims[2]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v4_yScale = d3.scale.linear().domain([(var_lims[3]['maxY']), (var_lims[3]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v5_yScale = d3.scale.linear().domain([(var_lims[4]['maxY']), (var_lims[4]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v6_yScale = d3.scale.linear().domain([(var_lims[5]['maxY']), (var_lims[5]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v7_yScale = d3.scale.linear().domain([(var_lims[6]['maxY']), (var_lims[6]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v8_yScale = d3.scale.linear().domain([(var_lims[7]['maxY']), (var_lims[7]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v9_yScale = d3.scale.linear().domain([(var_lims[8]['maxY']), (var_lims[8]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v10_yScale = d3.scale.linear().domain([(var_lims[9]['maxY']), (var_lims[9]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v11_yScale = d3.scale.linear().domain([(var_lims[10]['maxY']), (var_lims[10]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v12_yScale = d3.scale.linear().domain([(var_lims[11]['maxY']), (var_lims[11]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+var v13_yScale = d3.scale.linear().domain([(var_lims[12]['maxY']), (var_lims[12]['minY'])]).range([0+ph_padding,v_height-ph_padding]);
+
+//OVERRIDE YSCALE BOOLEANS
+var yScale_OR = [false,false,false,false,false,false,false,false,false,false,false,false,false];
+
+function optimizeAspectRatio(){
+
+	var currVarClass = d3.select(this).attr('class');
+	var currClassNum = parseFloat(currVarClass.split('var')[1]);
+	var currClassTicks = '.var'+currClassNum+'ticks';
+
+
+	//IF OPTIMIZED, DE-OPTIMIZE
+	if (yScale_OR[currClassNum-1]==true){
+		yScale_OR[currClassNum-1] = false;
+		console.log('got here true to false');
+	}
+	
+	//IF NOT OPTIMIZED, OPTIMIZE
+	else if (yScale_OR[currClassNum-1]==false){
+		yScale_OR[currClassNum-1] = true;
+		
+		var currMax= -1000;
+		var currMin = 1000;
+
+		for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+
+		
+			for (var j=0; j<(currPhData[currEp][currClassNum-1]).length; j++){
+				if ((currPhData[currEp][currClassNum-1][j]['vy'])==0) {continue;}
+				if ((currPhData[currEp][currClassNum-1][j]['vy']) > currMax) {currMax = currPhData[currEp][currClassNum-1][j]['vy']}
+				if ((currPhData[currEp][currClassNum-1][j]['vy']) < currMin) {currMin = currPhData[currEp][currClassNum-1][j]['vy']}
+			}
+				
+			switch(currClassNum){
+			case 1: v1_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 2: v2_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 3: v3_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 4: v4_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 5: v5_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 6: v6_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 7: v7_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 8: v8_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 9: v9_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 10: v10_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 11: v11_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 12: v12_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			case 13: v13_yScale = d3.scale.linear().domain([currMax, currMin]).range([0+ph_padding,v_height-ph_padding]); break;
+			}
+		}
+	}
+	
+	//REDRAW ENTIRE PHYS CANVAS
+	clearPhCanvas();
+	drawPhCanvas();
+	
+	//turn ticks green for an instant
+	d3.selectAll(currClassTicks)
+	.attr('fill', '#95f85f')
+	.transition()
+	.duration(650)
+	.attr('fill', 'white');
+	
+	//turn title green for an instant
+	d3.selectAll(("."+currVarClass))
+	.attr('fill', '#95f85f')
+	.transition()
+	.duration(650)
+	.attr('fill', 'white');
+	
+	reselectPatients();
+}
+
+function clearPhCanvas(){
+	d3.selectAll('.physcanvas').remove();
+}
+
+
+//PHYS CANVAS CREATIONS///////////////////////////////////////////////////////////////////////////////////////////////////////
+function drawPhCanvas(){
+
+	var v1Canvas = d3.select('#v1_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v2Canvas = d3.select('#v2_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v3Canvas = d3.select('#v3_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v4Canvas = d3.select('#v4_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v5Canvas = d3.select('#v5_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v6Canvas = d3.select('#v6_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v7Canvas = d3.select('#v7_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v8Canvas = d3.select('#v8_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v9Canvas = d3.select('#v9_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v10Canvas = d3.select('#v10_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v11Canvas = d3.select('#v11_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v12Canvas = d3.select('#v12_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	var v13Canvas = d3.select('#v13_div').append('svg:svg').attr('class', 'physcanvas').attr('width', v_width).attr('height', v_height);
+	
+	if (!yScale_OR[0]){v1_yScale = d3.scale.linear().domain([(var_lims[0]['maxY']), (var_lims[0]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[1]){v2_yScale = d3.scale.linear().domain([(var_lims[1]['maxY']), (var_lims[1]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[2]){v3_yScale = d3.scale.linear().domain([(var_lims[2]['maxY']), (var_lims[2]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[3]){v4_yScale = d3.scale.linear().domain([(var_lims[3]['maxY']), (var_lims[3]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[4]){v5_yScale = d3.scale.linear().domain([(var_lims[4]['maxY']), (var_lims[4]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[5]){v6_yScale = d3.scale.linear().domain([(var_lims[5]['maxY']), (var_lims[5]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[6]){v7_yScale = d3.scale.linear().domain([(var_lims[6]['maxY']), (var_lims[6]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[7]){v8_yScale = d3.scale.linear().domain([(var_lims[7]['maxY']), (var_lims[7]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[8]){v9_yScale = d3.scale.linear().domain([(var_lims[8]['maxY']), (var_lims[8]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[9]){v10_yScale = d3.scale.linear().domain([(var_lims[9]['maxY']), (var_lims[9]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[10]){v11_yScale = d3.scale.linear().domain([(var_lims[10]['maxY']), (var_lims[10]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[11]){v12_yScale = d3.scale.linear().domain([(var_lims[11]['maxY']), (var_lims[11]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+	if (!yScale_OR[12]){v13_yScale = d3.scale.linear().domain([(var_lims[12]['maxY']), (var_lims[12]['minY'])]).range([0+ph_padding,v_height-ph_padding]);}
+
+
+		
+	var v1_axisGroup = v1Canvas.append('svg:g');
+	var v2_axisGroup = v2Canvas.append('svg:g');
+	var v3_axisGroup = v3Canvas.append('svg:g');
+	var v4_axisGroup = v4Canvas.append('svg:g');
+	var v5_axisGroup = v5Canvas.append('svg:g');
+	var v6_axisGroup = v6Canvas.append('svg:g');
+	var v7_axisGroup = v7Canvas.append('svg:g');
+	var v8_axisGroup = v8Canvas.append('svg:g');
+	var v9_axisGroup = v9Canvas.append('svg:g');
+	var v10_axisGroup = v10Canvas.append('svg:g');
+	var v11_axisGroup = v11Canvas.append('svg:g');
+	var v12_axisGroup = v12Canvas.append('svg:g');
+	var v13_axisGroup = v13Canvas.append('svg:g');
+
+	var v1_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v1_yScale(d.vy)); });
+	var v2_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v2_yScale(d.vy)); });
+	var v3_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v3_yScale(d.vy)); });
+	var v4_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v4_yScale(d.vy)); });
+	var v5_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v5_yScale(d.vy)); });
+	var v6_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v6_yScale(d.vy)); });
+	var v7_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v7_yScale(d.vy)); });
+	var v8_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v8_yScale(d.vy)); });
+	var v9_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v9_yScale(d.vy)); });
+	var v10_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v10_yScale(d.vy)); });
+	var v11_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v11_yScale(d.vy)); });
+	var v12_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v12_yScale(d.vy)); });
+	var v13_line = d3.svg.line().x(function(d) { return ph_xScale(d.vx); }).y(function(d) { return (v13_yScale(d.vy)); });
+	
+	
+//VARIABLE 1///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v1Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v1_line(currPhData[currEp][0]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v1Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v1_line(currPhData[currQuery][0]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v1_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v1_axisGroup.selectAll("rule")
+			 .data(v1_yScale.ticks(10))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var1ticks')
+			 .attr("y", v1_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v1_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("dbp	(mmHg)")
+			.attr('class', 'var1')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+			
+//VARIABLE 2///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v2Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v2_line(currPhData[currEp][1]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v2Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v2_line(currPhData[currQuery][1]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v2_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v2_axisGroup.selectAll("rule")
+			 .data(v2_yScale.ticks(10))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var2ticks')
+			 .attr("y", v2_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v2_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("sbp	(mmHg)")
+			.attr('class', 'var2')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+
+//VARIABLE 3///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v3Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v3_line(currPhData[currEp][2]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v3Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v3_line(currPhData[currQuery][2]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v3_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v3_axisGroup.selectAll("rule")
+			 .data(v3_yScale.ticks(10))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var3ticks')
+			 .attr("y", v3_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v3_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("pcrr")
+			.attr('cursor', 'pointer')
+			.attr('class', 'var3')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 4///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v4Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v4_line(currPhData[currEp][3]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v4Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v4_line(currPhData[currQuery][3]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v4_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v4_axisGroup.selectAll("rule")
+			 .data(v4_yScale.ticks(10))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("y", v4_yScale)
+			 .attr('class', 'var4ticks')
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v4_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("etco	(mmHg)")
+			.attr('class', 'var4')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 5///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v5Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v5_line(currPhData[currEp][4]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v5Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v5_line(currPhData[currQuery][4]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v5_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v5_axisGroup.selectAll("rule")
+			 .data(v5_yScale.ticks(2))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var5ticks')
+			 .attr("y", v5_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v5_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("fio")
+			.attr('class', 'var5')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 6///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v6Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v6_line(currPhData[currEp][5]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v6Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v6_line(currPhData[currQuery][5]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v6_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v6_axisGroup.selectAll("rule")
+			 .data(v6_yScale.ticks(5))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var6ticks')
+			 .attr("y", v6_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v6_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("tgcs")
+			.attr('class', 'var6')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 7///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v7Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v7_line(currPhData[currEp][6]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v7Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v7_line(currPhData[currQuery][6]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v7_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v7_axisGroup.selectAll("rule")
+			 .data(v7_yScale.ticks(10))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var7ticks')
+			 .attr("y", v7_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v7_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("gluc")
+			.attr('class', 'var7')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 8///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v8Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v8_line(currPhData[currEp][7]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v8Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v8_line(currPhData[currQuery][7]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v8_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v8_axisGroup.selectAll("rule")
+			 .data(v8_yScale.ticks(7))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var8ticks')
+			 .attr("y", v8_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v8_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("hr (bpm)")
+			.attr('class', 'var8')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 9///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v9Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v9_line(currPhData[currEp][8]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v9Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v9_line(currPhData[currQuery][8]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v9_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v9_axisGroup.selectAll("rule")
+			 .data(v9_yScale.ticks(5))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var9ticks')
+			 .attr("y", v9_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v9_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("pha")
+			.attr('class', 'var9')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 10///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v10Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v10_line(currPhData[currEp][9]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v10Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v10_line(currPhData[currQuery][9]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v10_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v10_axisGroup.selectAll("rule")
+			 .data(v10_yScale.ticks(10))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var10ticks')
+			 .attr("y", v10_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v10_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("rr (bpm)")
+			.attr('class', 'var10')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 11///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v11Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v11_line(currPhData[currEp][10]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v11Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v11_line(currPhData[currQuery][10]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v11_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v11_axisGroup.selectAll("rule")
+			 .data(v11_yScale.ticks(10))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var11ticks')
+			 .attr("y", v11_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v11_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("pox (%)")
+			.attr('class', 'var11')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 12///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v12Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v12_line(currPhData[currEp][11]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v12Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v12_line(currPhData[currQuery][11]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v12_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v12_axisGroup.selectAll("rule")
+			 .data(v12_yScale.ticks(10))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var12ticks')
+			 .attr("y", v12_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v12_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text('temp (C)')
+			.attr('class', 'var12')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+//VARIABLE 13///////////////////////////////////////////////////////////////
+	for (var i=0; i<currSimData.length; i++){
+		var currEp = currSimData[i]['ep']
+		
+		//this line informed by http://davidfischer.name/2011/07/sparklines-in-d3/
+		var g = v13Canvas.append("svg:g"); 
+				g.append("svg:path")
+				.attr('class', ("_"+currEp))
+				.attr("d", v13_line(currPhData[currEp][12]))
+				.attr('stroke', 'black')
+				.attr('opacity', unselectcircle_op)
+				.style('stroke-opacity', unselectline_op)
+				.attr('stroke-width', '2')
+				.attr('fill', 'none')
+				.style('cursor', 'pointer')
+				.on('click',selectPatient);
+				//.on('mouseover', mouseOverData);
+	}
+		var g = v13Canvas.append("svg:g");
+				g.append("svg:path")
+				.attr('class', ("_"+currQuery))
+				.attr("d", v13_line(currPhData[currQuery][12]))
+				.attr('stroke', 'yellow').style('stroke-opacity', '1')
+				.attr('stroke-width', '2')
+				.attr('fill', 'none');
+					
+		v13_axisGroup.selectAll("rule")
+			 .data(ph_xScale.ticks(6))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr("x", ph_xScale)
+			 .attr("y", 175)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(0,20)')
+			 .attr('opacity', text_op)
+			 .text(function(String){return(String+"h")});
+			 
+		v13_axisGroup.selectAll("rule")
+			 .data(v13_yScale.ticks(5))
+			 .enter().append("svg:text")
+			 .attr("class", "rule")
+			 .attr('class', 'var13ticks')
+			 .attr("y", v13_yScale)
+			 .attr("font-size", "12px")
+			 .attr("fill", "white")
+			 .attr("text-anchor", "middle")
+			 .attr('transform', 'translate(12,0)')
+			 .attr('opacity', text_op)
+			 .text(String);
+			 
+		v13_axisGroup.append("svg:text")
+			.attr("x", (v_width/2))
+			.attr("y", 0)
+			.attr("dy", ".7em")
+			.attr("fill", "white")
+			.attr("text-anchor", "middle")
+			.attr("font-size", "12px")
+			.text("uo (cc/kg/hr)")
+			.attr('class', 'var13')
+			.attr('cursor', 'pointer')
+			.on('click', optimizeAspectRatio).on('mouseover', turnTextGreen).on('mouseout', turnTextWhite);
+} //end drawPhCanvas
+		
+drawPhCanvas();
+		
+console.log('finished script')
+
+//FADE LOADING DIV ON SCRIPT COMPLETION
+$('#loading_screen').fadeOut(500); 
+</script>
+
+
+
+
+</html>

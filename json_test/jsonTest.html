@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>getJSON test</title>
+
+<script type="text/javascript" src="jquery-1.6.2.js"></script>
+
+
+
+<style type="text/css">
+
+</style>
+</head>
+
+
+
+<body>
+	<div class='result' id="all">
+	Empty Div
+	</div>
+</body>
+
+
+<script type="text/javascript">		
+
+var a = "hello, this is original a";
+$('#all').html(a);
+
+
+$.ajax({
+  url: 'http://cgi.stanford.edu/~stubbs/test.json',
+	dataType: 'json',
+  success: function(data) {
+		a = data;
+		$('#all').html(a);
+    console.log('Load was performed.  Redraw page.');
+		console.log(a['name']);
+  }
+});
+
+
+
+
+
+// $.ajax({
+  // url: 'http://cgi.stanford.edu/~stubbs/test.json',
+  // dataType: 'json',
+  // success: alert('json success')
+// });
+
+// $.ajax({
+  // url: 'http://cgi.stanford.edu/~stubbs/test.js',
+  // dataType: 'script',
+  // success: alert('script success')
+// });
+
+// $.getJSON('http://cgi.stanford.edu/~stubbs/test.json', function() {
+	// alert('got here');
+  // var items = [];
+
+  // $.each(data, function(key, val) {
+    // items.push('<li id="' + key + '">' + val + '</li>');
+  // });
+
+  // $('<ul/>', {
+    // 'class': 'my-new-list',
+    // html: items.join('')
+  // }).appendTo('body');
+
+// });
+
+
+
+</script>
+
+</html>
